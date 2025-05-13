@@ -1,0 +1,19 @@
+{
+  "name": "backend-retail-prices-comparer",
+  "version": "1.0.0",
+  "description": "Backend application for software development deliverable, used to compare retail prices",
+  "main": "tests.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pacematiase/backend-retail-prices-comparer.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pacematiase/backend-retail-prices-comparer/issues"
+  },
+  "homepage": "https://github.com/pacematiase/backend-retail-prices-comparer#readme"
+}
