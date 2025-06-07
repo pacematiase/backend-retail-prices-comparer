@@ -1,5 +1,4 @@
 import express, { NextFunction, Request, Response } from "express";
-import retailData from "./Data/RetailData";
 import { it } from "node:test";
 
 const app = express();
