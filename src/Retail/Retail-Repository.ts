@@ -11,7 +11,7 @@ const retailData: Retail[] = [
     retailName: "La Gallega",
   },
 ];
-export class RetailRepository implements Repository<Retail> {
+export default class RetailRepository implements Repository<Retail> {
   public add(item: Retail): Retail | undefined {
     retailData.push(item);
     return item;
@@ -40,7 +40,7 @@ export class RetailRepository implements Repository<Retail> {
     return retailData;
   }
 
-  public findOne(item: { id: number }): Retail | undefined {
-    return retailData.find((retail) => retail.retailId === item.id);
+  public findOne(item: { id: number | string }): Retail | undefined {
+    return retailData.find((retail) => retail.retailId == item.id);
   }
 }
