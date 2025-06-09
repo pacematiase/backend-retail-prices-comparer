@@ -1,0 +1,26 @@
+GET http://localhost:3000/Retail
+
+###
+GET http://localhost:3000/Retail/2
+
+###
+POST http://localhost:3000/Retail
+Content-Type: application/json
+
+{
+  "retailId": 3,
+  "retailName": "Libertad",
+  "dato incorrecto": 123
+  }
+
+###
+PUT http://localhost:3000/Retail/2
+Content-Type: application/json
+
+{
+  "retailId": 2,
+  "retailName": "Libertad"
+  }
+
+###
+DELETE http://localhost:3000/Retail/2

@@ -1,6 +1,7 @@
 import { Repository } from "../Shared/repository";
 import { Retail } from "./Retail-Entity";
 
+// BDD en memoria
 const retailData: Retail[] = [
   {
     retailId: 1,
@@ -11,6 +12,8 @@ const retailData: Retail[] = [
     retailName: "La Gallega",
   },
 ];
+
+// logica del CRUD y validaciones
 export default class RetailRepository implements Repository<Retail> {
   public add(item: Retail): Retail | undefined {
     retailData.push(item);

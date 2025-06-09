@@ -43,14 +43,17 @@ export async function remove(req: Request, res: Response) {
   const retId = req.params.id;
   const retailId: number = parseInt(retId);
   const retail = repository.delete({ id: retailId });
-  res.status(200).json({ message: "Retail Deleted", data: retail });
+  if (retail !== undefined){
+    res.status(200).json({ message: "Retail Deleted", data: retail })
+  }else
+    res.status(500).json({ message: "Retail does not exist" });
 }
 
-//TODO Este no esta andando, el body queda como undefined
+//Anda pero tendriamos que validar que no se repitan nombres y que el id se asigne automaticamente sin repetirse
 export async function add(req: Request, res: Response) {
   try {
-    const id = req.body?.id;
-    const nombre = req.body?.nombre;
+    const id = req.body.retailId;
+    const nombre = req.body.retailName;
     if (id !== undefined && nombre != undefined) {
       const retailNuevo = new Retail(id, nombre);
       const retailCargado = repository.add(retailNuevo);
