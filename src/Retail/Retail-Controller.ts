@@ -65,7 +65,22 @@ export async function add(req: Request, res: Response) {
     }
   } catch (error: any) {
     res.status(500).json({
-      message: error.message + "   " + req.body?.id + req.body?.nombre,
+      message: error.message + "   " + req.body.retailIdd + req.body.retailName,
+    });
+  }
+}
+export async function update(req: Request, res: Response) {
+  try {
+    const id = parseInt(req.params.id);
+    const nombre = req.body.retailName;
+    const retail = repository.findOne({ id: id });
+    if (retail !== undefined) {
+      retail.retailName = nombre; 
+      res.status(200).json({ message: "Retail updated", data: retail });     
+    }
+  } catch (error: any) {
+    res.status(500).json({
+      message: error.message + "   " + req.body.retailIdd + req.body.retailName,
     });
   }
 }
