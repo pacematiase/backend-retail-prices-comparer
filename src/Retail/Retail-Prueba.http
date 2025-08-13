@@ -9,8 +9,7 @@ Content-Type: application/json
 
 {
   "retailId": 3,
-  "retailName": "Libertad",
-  "dato incorrecto": 123
+  "retailName": "Libertad"
   }
 
 ###

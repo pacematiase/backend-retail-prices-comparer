@@ -1,5 +1,14 @@
+#General 
 node_modules/
 *.js
 dist/
 package-lock.json
 
+
+# Docker / DB
+docker-volumes/
+*.sql
+retail-prices-comparer-data/
+
+# Configs locales
+.env
