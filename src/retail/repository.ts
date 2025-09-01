@@ -1,5 +1,5 @@
 import { Repository } from '../shared/interfaces/repository.js';
-import { Retail } from './retail.entity.js';
+import { Retail } from './entity.js';
 
 // BDD en memoria
 const retailData: Retail[] = [

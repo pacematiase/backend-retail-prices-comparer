@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { add, findAll, findOne, remove, update } from './retail.controller.js';
+import { add, findAll, findOne, remove, update } from './controller.js';
 
 const retailRouter = Router();
 

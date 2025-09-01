@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import RetailRepository from './retail.repository.js';
-import { Retail } from './retail.entity.js';
+import RetailRepository from './repository.js';
+import { Retail } from './entity.js';
 
 const repository = new RetailRepository();
 

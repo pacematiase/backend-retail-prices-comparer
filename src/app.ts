@@ -1,9 +1,10 @@
 import 'dotenv/config';
 import express, { NextFunction, Request, Response } from 'express';
 import 'reflect-metadata';
-import retailRouter from './retail/retail.routes.js';
+import retailRouter from './retail/routes.js';
 import { orm, syncSchema } from './shared/db/orm.js';
 import { RequestContext } from '@mikro-orm/core';
+import { verifyToken } from './shared/jwt/controller.js';
 
 async function start() {
   const app = express();
