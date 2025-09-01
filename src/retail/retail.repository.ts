@@ -1,15 +1,15 @@
-import { Repository } from "../Shared/repository";
-import { Retail } from "./Retail-Entity";
+import { Repository } from '../shared/interfaces/repository.js';
+import { Retail } from './retail.entity.js';
 
 // BDD en memoria
 const retailData: Retail[] = [
   {
     retailId: 1,
-    retailName: "coto",
+    retailName: 'coto',
   },
   {
     retailId: 2,
-    retailName: "La Gallega",
+    retailName: 'La Gallega',
   },
 ];
 
