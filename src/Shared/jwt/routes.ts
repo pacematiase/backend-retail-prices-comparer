@@ -1,9 +1,9 @@
 import { Router } from 'express';
 import { generateToken } from './controller.js';
 
-const router = Router();
+const authRouter = Router();
 
-router.post('/login', (req, res) => {
+authRouter.post('/login', (req, res) => {
   const { userName, password } = req.body;
 
   //  Replace with call to users controller.
@@ -18,4 +18,4 @@ router.post('/login', (req, res) => {
   res.status(401).json({ message: 'Invalid credentials' });
 });
 
-export default router;
+export default authRouter;

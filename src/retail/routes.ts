@@ -1,16 +1,17 @@
+import { authMiddleware, AuthRequest } from '../shared/jwt/auth.js';
 import { Router } from 'express';
 import { add, findAll, findOne, remove, update } from './controller.js';
 
 const retailRouter = Router();
 
-retailRouter.get('/', findAll);
+retailRouter.get('/', authMiddleware, findAll);
 
-retailRouter.get('/:id', findOne);
+retailRouter.get('/:id', authMiddleware, findOne);
 
-retailRouter.post('/', add);
+retailRouter.post('/', authMiddleware, add);
 
-retailRouter.put('/:id', update);
+retailRouter.put('/:id', authMiddleware, update);
 
-retailRouter.delete('/:id', remove);
+retailRouter.delete('/:id', authMiddleware, remove);
 
 export default retailRouter;
