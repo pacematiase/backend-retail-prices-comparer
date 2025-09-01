@@ -2,7 +2,7 @@ import 'dotenv/config';
 import express, { NextFunction, Request, Response } from 'express';
 import 'reflect-metadata';
 import retailRouter from './retail/routes.js';
-import { orm, syncSchema } from './shared/db/orm.js';
+import { orm, syncSchema, newSchema } from './shared/db/orm.js';
 import { RequestContext } from '@mikro-orm/core';
 import { verifyToken } from './shared/jwt/controller.js';
 
