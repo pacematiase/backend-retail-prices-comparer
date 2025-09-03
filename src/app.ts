@@ -8,6 +8,7 @@ import { ARRAY_OPERATORS, RequestContext } from '@mikro-orm/core';
 import { verifyToken } from './shared/jwt/controller.js';
 import swaggerUi from 'swagger-ui-express';
 import { swaggerSpec } from './shared/swagger/spec.js';
+import OpenApiValidator from 'express-openapi-validator';
 
 async function start() {
   // Express setup
@@ -23,8 +24,16 @@ async function start() {
   // Never run syncSchema in a production environment!!! It could drop the database
   await syncSchema();
 
-  // Swagger Setup (Show APIs documentation in https://DATABASE_HOST:PORT/docs)
+  // Swagger OpenAPI Setup (Show APIs documentation in http://DATABASE_HOST:PORT/docs)
   app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+  // OpenAPI validator setup, to validate that all API calls follow the schema defined in each routes.ts file and return 400 if not
+  app.use(
+    OpenApiValidator.middleware({
+      apiSpec: swaggerSpec as any,
+      validateRequests: true,
+    })
+  );
 
   // Routes setup (API endpoints)
   app.use('/retail', retailRouter);
@@ -32,7 +41,9 @@ async function start() {
 
   // Publish service
   app.listen(process.env.PORT, () => {
-    console.log(`Listening to port ${process.env.PORT}`);
+    console.log(
+      `Server started. Refer to http://${process.env.DATABASE_HOST}:${process.env.PORT}/docs for API documentation`
+    );
   });
 }
 

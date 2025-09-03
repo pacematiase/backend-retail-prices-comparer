@@ -36,9 +36,29 @@ export default retailRouter;
  *     security:
  *       - bearerAuth: []
  *     summary: Create a retail
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - retailId
+ *               - retailName
+ *             properties:
+ *               retailId:
+ *                 type: integer
+ *                 example: 1
+ *               retailName:
+ *                 type: string
+ *                 example: Coto
  *     responses:
  *       200:
  *         description: Created retail information
+ */
+
+/**
+ * @openapi
  * /retail/{id}:
  *   get:
  *     tags:
@@ -46,6 +66,14 @@ export default retailRouter;
  *     security:
  *       - bearerAuth: []
  *     summary: Get one retail
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID of the retail
+ *         schema:
+ *           type: integer
+ *           example: 1
  *     responses:
  *       200:
  *         description: Found retail information
@@ -55,16 +83,44 @@ export default retailRouter;
  *     security:
  *       - bearerAuth: []
  *     summary: Update a retail
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID of the retail
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - retailName
+ *             properties:
+ *               retailName:
+ *                 type: string
+ *                 example: Coto
  *     responses:
  *       200:
- *         description: Found retail information
+ *         description: Retail was successfully updated
  *   delete:
  *     tags:
  *       - Retail
  *     security:
  *       - bearerAuth: []
  *     summary: Delete a retail
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID of the retail
+ *         schema:
+ *           type: integer
+ *           example: 1
  *     responses:
  *       200:
- *         description: Found retail information
+ *         description: Retail was successfully deleted
  */
