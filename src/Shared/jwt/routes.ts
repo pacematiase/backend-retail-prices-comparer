@@ -19,3 +19,36 @@ authRouter.post('/login', (req, res) => {
 });
 
 export default authRouter;
+
+// Swagger documentation
+
+/**
+ * @openapi
+ * /auth/login:
+ *   post:
+ *     summary: Get an authentication token
+ *     tags:
+ *       - Authentication
+ *     security: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - userName
+ *               - password
+ *             properties:
+ *               userName:
+ *                 type: string
+ *                 example: Alice
+ *               password:
+ *                 type: string
+ *                 example: alice1
+ *     responses:
+ *       200:
+ *         description: Authentication token successfully received
+ *       401:
+ *         description: Invalid credentials
+ */
