@@ -4,11 +4,9 @@ import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
 export class Retail {
   @PrimaryKey()
   retailId!: number;
-  @Property({ nullable: false })
+  @Property({ nullable: false, unique: true })
   retailName!: string;
-
-  constructor(retailId: number, retailName: string) {
-    this.retailId = retailId;
+  constructor(retailName: string) {
     this.retailName = retailName;
   }
 }

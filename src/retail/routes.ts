@@ -1,18 +1,24 @@
 import { authMiddleware, AuthRequest } from '../shared/jwt/auth.js';
 import { Router } from 'express';
-import { add, findAll, findOne, remove, update } from './controller.js';
+import {
+  cRetailFindAll,
+  cRetailFindOneById,
+  cRetailInsert,
+  cRetailRename,
+  cRetailDelete,
+} from './controller.js';
 
 const retailRouter = Router();
 
-retailRouter.get('/', authMiddleware, findAll);
+retailRouter.get('/', authMiddleware, cRetailFindAll);
 
-retailRouter.post('/', authMiddleware, add);
+retailRouter.get('/:retailId', authMiddleware, cRetailFindOneById);
 
-retailRouter.get('/:id', authMiddleware, findOne);
+retailRouter.post('/', authMiddleware, cRetailInsert);
 
-retailRouter.put('/:id', authMiddleware, update);
+retailRouter.put('/:retailId', authMiddleware, cRetailRename);
 
-retailRouter.delete('/:id', authMiddleware, remove);
+retailRouter.delete('/:retailId', authMiddleware, cRetailDelete);
 
 export default retailRouter;
 
@@ -43,12 +49,8 @@ export default retailRouter;
  *           schema:
  *             type: object
  *             required:
- *               - retailId
  *               - retailName
  *             properties:
- *               retailId:
- *                 type: integer
- *                 example: 1
  *               retailName:
  *                 type: string
  *                 example: Coto
@@ -59,7 +61,7 @@ export default retailRouter;
 
 /**
  * @openapi
- * /retail/{id}:
+ * /retail/{retailId}:
  *   get:
  *     tags:
  *       - Retail
@@ -68,7 +70,7 @@ export default retailRouter;
  *     summary: Get one retail
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: retailId
  *         required: true
  *         description: ID of the retail
  *         schema:
@@ -85,7 +87,7 @@ export default retailRouter;
  *     summary: Update a retail
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: retailId
  *         required: true
  *         description: ID of the retail
  *         schema:
@@ -114,7 +116,7 @@ export default retailRouter;
  *     summary: Delete a retail
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: retailId
  *         required: true
  *         description: ID of the retail
  *         schema:

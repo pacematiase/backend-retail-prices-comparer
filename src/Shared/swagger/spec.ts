@@ -29,6 +29,9 @@ Authorization: Bearer <your-token>
 > Note: This documentation is auto-generated from JSDoc comments.
       `,
     },
+
+    // Tags: To group APIs by title
+
     tags: [
       {
         name: 'Authentication',
@@ -49,6 +52,9 @@ Authorization: Bearer <your-token>
       },
     },
   },
+
+  // .ts files from which to get the API descriptions.
+
   apis: ['./src/**/routes.ts'],
 };
 

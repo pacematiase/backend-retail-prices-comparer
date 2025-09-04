@@ -12,6 +12,8 @@ declare global {
       DATABASE_NAME: string;
       DATABASE_USER: string;
       DATABASE_PASSWORD: string;
+      ORM_SYNC_SCHEMA: string;
+      ORM_NEW_SCHEMA: string;
     }
   }
 }

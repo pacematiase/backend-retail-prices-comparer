@@ -12,22 +12,34 @@ import OpenApiValidator from 'express-openapi-validator';
 
 async function start() {
   // Express setup
+  console.log(`\n Starting express`);
   const app = express();
   // Enable json usage
+  console.log(`\n Starting express JSON parser`);
   app.use(express.json());
 
-  // ORM Setup
+  // ORM (database) setup
   // Create RequestContext to use ORM without interferring between requests
+  console.log(`\n Setting up concurrency for mikroORM`);
   app.use((req: Request, res: Response, next: NextFunction) => {
     RequestContext.create(orm.em, next);
   });
-  // Never run syncSchema in a production environment!!! It could drop the database
-  await syncSchema();
+  // Never run syncSchema or newSchema in a production environment!!! It could drop the database
+  if (process.env.ORM_NEW_SCHEMA === 'true') {
+    console.log(`\n Dropping and re-creating database schema`);
+    await newSchema();
+  }
+  if (process.env.ORM_SYNC_SCHEMA === 'true') {
+    console.log(`\n Syncing database schema`);
+    await syncSchema();
+  }
 
   // Swagger OpenAPI Setup (Show APIs documentation in http://DATABASE_HOST:PORT/docs)
+  console.log(`\n Starting OpenAPI Swagger documentation`);
   app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
   // OpenAPI validator setup, to validate that all API calls follow the schema defined in each routes.ts file and return 400 if not
+  console.log(`\n Enabling OpenAPI Payload schema validator`);
   app.use(
     OpenApiValidator.middleware({
       apiSpec: swaggerSpec as any,
@@ -36,13 +48,15 @@ async function start() {
   );
 
   // Routes setup (API endpoints)
+  console.log(`\n Opening endpoints`);
   app.use('/retail', retailRouter);
   app.use('/auth', authRouter);
 
   // Publish service
+  console.log(`\n Publishing service`);
   app.listen(process.env.PORT, () => {
     console.log(
-      `Server started. Refer to http://${process.env.DATABASE_HOST}:${process.env.PORT}/docs for API documentation`
+      `\n Server started. Refer to http://${process.env.DATABASE_HOST}:${process.env.PORT}/docs for API documentation`
     );
   });
 }
