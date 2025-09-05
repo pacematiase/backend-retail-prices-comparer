@@ -1,4 +1,4 @@
-import { authMiddleware, AuthRequest } from '../shared/jwt/auth.js';
+import { authMiddleware } from '../shared/auth/service.js';
 import { Router } from 'express';
 import {
   cRetailFindAll,

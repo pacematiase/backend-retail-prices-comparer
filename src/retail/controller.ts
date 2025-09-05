@@ -11,7 +11,11 @@ export async function cRetailFindAll(req: Request, res: Response) {
   const result = await sRetailFindAll();
   res
     .status(result.statusCode)
-    .json({ message: result.message, data: result.data });
+    .json({
+      message: result.message,
+      errDetails: result.errDetails,
+      data: result.data,
+    });
 }
 
 export async function cRetailFindOneById(req: Request, res: Response) {
@@ -19,14 +23,22 @@ export async function cRetailFindOneById(req: Request, res: Response) {
   const result = await sRetailFindOneById({ retailId: retailId });
   res
     .status(result.statusCode)
-    .json({ message: result.message, data: result.data });
+    .json({
+      message: result.message,
+      errDetails: result.errDetails,
+      data: result.data,
+    });
 }
 
 export async function cRetailInsert(req: Request, res: Response) {
   const result = await sRetailInsert({ retailName: req.body.retailName });
   res
     .status(result.statusCode)
-    .json({ message: result.message, data: result.data });
+    .json({
+      message: result.message,
+      errDetails: result.errDetails,
+      data: result.data,
+    });
 }
 
 export async function cRetailRename(req: Request, res: Response) {
@@ -37,7 +49,11 @@ export async function cRetailRename(req: Request, res: Response) {
   });
   res
     .status(result.statusCode)
-    .json({ message: result.message, data: result.data });
+    .json({
+      message: result.message,
+      errDetails: result.errDetails,
+      data: result.data,
+    });
 }
 
 export async function cRetailDelete(req: Request, res: Response) {
@@ -47,5 +63,9 @@ export async function cRetailDelete(req: Request, res: Response) {
   });
   res
     .status(result.statusCode)
-    .json({ message: result.message, data: result.data });
+    .json({
+      message: result.message,
+      errDetails: result.errDetails,
+      data: result.data,
+    });
 }

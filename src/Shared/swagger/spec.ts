@@ -34,12 +34,16 @@ Authorization: Bearer <your-token>
 
     tags: [
       {
-        name: 'Authentication',
-        description: 'Operation to get an access token',
+        name: 'Auth',
+        description: 'Authentication functions',
       },
       {
         name: 'Retail',
-        description: 'Retail CRUD',
+        description: 'Retails CRUD',
+      },
+      {
+        name: 'User',
+        description: 'Users CRUD',
       },
     ],
     components: {
