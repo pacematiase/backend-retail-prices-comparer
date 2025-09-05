@@ -16,6 +16,7 @@ declare global {
       DATABASE_NAME: string;
       DATABASE_USER: string;
       DATABASE_PASSWORD: string;
+      DATABASE_DEBUG: string;
       ORM_SYNC_SCHEMA: string;
       ORM_NEW_SCHEMA: string;
       JWT_EXPIRES_IN: string;
@@ -49,6 +50,11 @@ export const config = {
   DATABASE_PASSWORD: process.env.DATABASE_PASSWORD,
   DATABASE_NAME: process.env.DATABASE_NAME,
   DATABASE_PORT: parseInt(process.env.DATABASE_PORT),
+  DATABASE_DEBUG:
+    process.env.DATABASE_DEBUG === 'true' &&
+    process.env.NODE_ENV !== 'production'
+      ? true
+      : false,
   ORM_SYNC_SCHEMA:
     process.env.ORM_SYNC_SCHEMA === 'true' &&
     process.env.NODE_ENV !== 'production'

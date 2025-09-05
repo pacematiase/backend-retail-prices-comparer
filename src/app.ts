@@ -33,7 +33,7 @@ async function start() {
     console.log(`\n Dropping and re-creating database schema`);
     await newSchema();
     console.log(`\n Creating default administrator user`);
-    RequestContext.create(orm.em, async () => {
+    await RequestContext.create(orm.em, async () => {
       await sUserInsert({
         userName: 'admin',
         userPassword: 'admin',

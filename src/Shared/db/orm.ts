@@ -12,7 +12,7 @@ export const orm = await MikroORM.init({
   password: config.DATABASE_PASSWORD,
   entities: ['dist/**/*entity.js'],
   entitiesTs: ['src/**/*entity.ts'],
-  debug: false,
+  debug: config.DATABASE_DEBUG,
   highlighter: new SqlHighlighter(),
 });
 
