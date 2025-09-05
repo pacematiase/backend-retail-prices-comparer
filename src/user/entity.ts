@@ -1,13 +1,5 @@
 import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
-
-export enum UserRole {
-  administrator = 1,
-  endUser = 2,
-}
-
-export function isUserRole(value: unknown): value is UserRole {
-  return typeof value === 'number' && Object.values(UserRole).includes(value);
-}
+import { UserRole } from '../shared/enums/userRole.js';
 
 @Entity()
 export class User {
@@ -15,7 +7,7 @@ export class User {
   userId!: number;
   @Property({ nullable: false, unique: true })
   userName!: string;
-  @Property({ nullable: false })
+  @Property({ nullable: false, hidden: true })
   userPassword!: string;
   @Property({ nullable: false })
   userRole!: UserRole;

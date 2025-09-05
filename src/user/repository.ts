@@ -1,5 +1,6 @@
 import { orm } from '../shared/db/orm.js';
-import { User, UserRole } from './entity.js';
+import { User } from './entity.js';
+import { UserRole } from '../shared/enums/userRole.js';
 
 export async function rUserFindAll() {
   return await orm.em.findAll(User);
@@ -11,6 +12,14 @@ export async function rUserFindOneById(userId: number) {
 
 export async function rUserFindOneByName(userName: string) {
   return await orm.em.findOne(User, { userName: userName });
+}
+
+export async function rUserGetHashedPassword(userName: string) {
+  return await orm.em.findOne(
+    User,
+    { userName: userName },
+    { fields: ['userId', 'userRole', 'userPassword'] }
+  );
 }
 
 export async function rUserInsert(User: User) {

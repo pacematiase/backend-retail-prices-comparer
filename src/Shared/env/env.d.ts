@@ -8,12 +8,14 @@ declare global {
       PORT: string;
       JWT_SECRET: string;
       DATABASE_HOST: string;
-      DATABASE_PORT: number;
+      DATABASE_PORT: string;
       DATABASE_NAME: string;
       DATABASE_USER: string;
       DATABASE_PASSWORD: string;
       ORM_SYNC_SCHEMA: string;
       ORM_NEW_SCHEMA: string;
+      JWT_EXPIRES_IN: string;
+      BCRYPT_SALT: string;
     }
   }
 }
