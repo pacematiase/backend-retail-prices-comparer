@@ -1,3 +1,4 @@
+import { config } from '../env/env.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
@@ -7,11 +8,10 @@ import { ControllerResponse } from '../classes/controllerResponse.js';
 
 // to generate a secret key, run node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
 
-const JWT_SECRET = process.env.JWT_SECRET;
-const JWT_EXPIRES_IN = parseInt(process.env.JWT_EXPIRES_IN);
-const BCRYPT_SALT = parseInt(process.env.BCRYPT_SALT); // Higher = safer & slower
+const JWT_SECRET = config.JWT_SECRET;
+const JWT_EXPIRES_IN = config.JWT_EXPIRES_IN;
+const BCRYPT_SALT = config.BCRYPT_SALT; // Higher = safer & slower
 
-console.log();
 interface AuthRequest extends Request {
   userId?: string;
   userRole?: UserRole;

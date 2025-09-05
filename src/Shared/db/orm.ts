@@ -1,17 +1,18 @@
+import { config } from '../env/env.js';
 import { MikroORM } from '@mikro-orm/core';
 import { MySqlDriver } from '@mikro-orm/mysql';
 import { SqlHighlighter } from '@mikro-orm/sql-highlighter';
 
 export const orm = await MikroORM.init({
   driver: MySqlDriver,
-  host: process.env.DATABASE_HOST,
-  port: parseInt(process.env.DATABASE_PORT),
-  dbName: process.env.DATABASE_NAME,
-  user: process.env.DATABASE_USER,
-  password: process.env.DATABASE_PASSWORD,
+  host: config.DATABASE_HOST,
+  port: config.DATABASE_PORT,
+  dbName: config.DATABASE_NAME,
+  user: config.DATABASE_USER,
+  password: config.DATABASE_PASSWORD,
   entities: ['dist/**/*entity.js'],
   entitiesTs: ['src/**/*entity.ts'],
-  debug: true,
+  debug: false,
   highlighter: new SqlHighlighter(),
 });
 
