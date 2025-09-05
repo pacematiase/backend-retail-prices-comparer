@@ -73,11 +73,7 @@ export async function sAuthLogin(item: {
   }
 }
 
-export const verifyToken = (token: string): JwtPayload => {
-  return jwt.verify(token, JWT_SECRET) as JwtPayload;
-};
-
-export const authMiddleware = (
+export const sValidateToken = (
   req: AuthRequest,
   res: Response,
   next: NextFunction
@@ -90,11 +86,24 @@ export const authMiddleware = (
   const token = authHeader.split(' ')[1]; // "Bearer <token>"
 
   try {
-    const decoded = verifyToken(token);
+    const decoded = jwt.verify(token, JWT_SECRET) as JwtPayload;
     req.userId = decoded.userId;
     req.userRole = decoded.userRole;
     next();
   } catch (err) {
     return res.status(403).json({ message: 'Invalid or expired token' });
   }
+};
+
+export const sValidateRole = (allowedRoles: UserRole[]) => {
+  return (req: AuthRequest, res: Response, next: NextFunction) => {
+    const userRole = req.userRole;
+    if (!userRole || !allowedRoles.includes(userRole)) {
+      return res.status(403).json({
+        message: `Your access role does not have access to execute this API`,
+      });
+    }
+
+    next();
+  };
 };

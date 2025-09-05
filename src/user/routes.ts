@@ -1,4 +1,9 @@
-import { authMiddleware } from '../shared/auth/service.js';
+// TODO: Change username for self
+// TODO: Change password for self
+// TODO: Delete self
+// TODO: See own user data
+
+import { sValidateToken, sValidateRole } from '../shared/auth/service.js';
 import { Router } from 'express';
 import {
   cUserFindAll,
@@ -7,18 +12,44 @@ import {
   cUserPatch,
   cUserDelete,
 } from './controller.js';
+import { UserRole } from '../shared/enums/userRole.js';
 
 const userRouter = Router();
 
-userRouter.get('/', authMiddleware, cUserFindAll);
+userRouter.get(
+  '/',
+  sValidateToken,
+  sValidateRole([UserRole.administrator]),
+  cUserFindAll
+);
 
-userRouter.get('/:userId', authMiddleware, cUserFindOneById);
+userRouter.get(
+  '/:userId',
+  sValidateToken,
+  sValidateRole([UserRole.administrator]),
+  cUserFindOneById
+);
 
-userRouter.post('/', authMiddleware, cUserInsert);
+userRouter.post(
+  '/',
+  sValidateToken,
+  sValidateRole([UserRole.administrator]),
+  cUserInsert
+);
 
-userRouter.put('/:userId', authMiddleware, cUserPatch);
+userRouter.put(
+  '/:userId',
+  sValidateToken,
+  sValidateRole([UserRole.administrator]),
+  cUserPatch
+);
 
-userRouter.delete('/:userId', authMiddleware, cUserDelete);
+userRouter.delete(
+  '/:userId',
+  sValidateToken,
+  sValidateRole([UserRole.administrator]),
+  cUserDelete
+);
 
 export default userRouter;
 

@@ -1,4 +1,4 @@
-import { authMiddleware } from '../shared/auth/service.js';
+import { sValidateToken, sValidateRole } from '../shared/auth/service.js';
 import { Router } from 'express';
 import {
   cRetailFindAll,
@@ -7,18 +7,44 @@ import {
   cRetailRename,
   cRetailDelete,
 } from './controller.js';
+import { UserRole } from '../shared/enums/userRole.js';
 
 const retailRouter = Router();
 
-retailRouter.get('/', authMiddleware, cRetailFindAll);
+retailRouter.get(
+  '/',
+  sValidateToken,
+  sValidateRole([UserRole.administrator, UserRole.endUser]),
+  cRetailFindAll
+);
 
-retailRouter.get('/:retailId', authMiddleware, cRetailFindOneById);
+retailRouter.get(
+  '/:retailId',
+  sValidateToken,
+  sValidateRole([UserRole.administrator, UserRole.endUser]),
+  cRetailFindOneById
+);
 
-retailRouter.post('/', authMiddleware, cRetailInsert);
+retailRouter.post(
+  '/',
+  sValidateToken,
+  sValidateRole([UserRole.administrator]),
+  cRetailInsert
+);
 
-retailRouter.put('/:retailId', authMiddleware, cRetailRename);
+retailRouter.put(
+  '/:retailId',
+  sValidateToken,
+  sValidateRole([UserRole.administrator]),
+  cRetailRename
+);
 
-retailRouter.delete('/:retailId', authMiddleware, cRetailDelete);
+retailRouter.delete(
+  '/:retailId',
+  sValidateToken,
+  sValidateRole([UserRole.administrator]),
+  cRetailDelete
+);
 
 export default retailRouter;
 
