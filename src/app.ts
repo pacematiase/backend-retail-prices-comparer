@@ -1,4 +1,4 @@
-import 'dotenv/config';
+import { config } from './shared/env/env.js';
 import express, { NextFunction, Request, Response } from 'express';
 import 'reflect-metadata';
 import { orm, syncSchema, newSchema } from './shared/db/orm.js';
@@ -29,7 +29,7 @@ async function start() {
     RequestContext.create(orm.em, next);
   });
   // Never run syncSchema or newSchema in a production environment!!! It could drop the database
-  if (process.env.ORM_NEW_SCHEMA === 'true') {
+  if (config.ORM_NEW_SCHEMA === true) {
     console.log(`\n Dropping and re-creating database schema`);
     await newSchema();
     console.log(`\n Creating default administrator user`);
@@ -41,7 +41,7 @@ async function start() {
       });
     });
   }
-  if (process.env.ORM_SYNC_SCHEMA === 'true') {
+  if (config.ORM_SYNC_SCHEMA === true) {
     console.log(`\n Syncing database schema`);
     await syncSchema();
   }
@@ -67,9 +67,9 @@ async function start() {
 
   // Publish service
   console.log(`\n Publishing service`);
-  app.listen(process.env.PORT, () => {
+  app.listen(config.PORT, () => {
     console.log(
-      `\n Server started. Refer to http://${process.env.DATABASE_HOST}:${process.env.PORT}/docs for API documentation`
+      `\n Server started. Refer to http://${config.DATABASE_HOST}:${config.PORT}/docs for API documentation`
     );
   });
 }

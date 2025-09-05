@@ -1,3 +1,4 @@
+import { config } from '../env/env.js';
 import swaggerJsdoc from 'swagger-jsdoc';
 
 const options: swaggerJsdoc.Options = {
@@ -12,7 +13,7 @@ const options: swaggerJsdoc.Options = {
 
 ## Getting Started
 
-- Base URL: \`http://${process.env.DATABASE_HOST}:${process.env.PORT}\`
+- Base URL: \`http://${config.DATABASE_HOST}:${config.PORT}\`
 - All endpoints accept and return JSON.
 
 ## Authentication

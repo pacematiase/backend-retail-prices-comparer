@@ -9,6 +9,3 @@ package-lock.json
 docker-volumes/
 *.sql
 retail-prices-comparer-data/
-
-# Configs locales
-.env
