@@ -3,12 +3,13 @@ import express, { NextFunction, Request, Response } from 'express';
 import 'reflect-metadata';
 import retailRouter from './retail/routes.js';
 import authRouter from './shared/jwt/routes.js';
+import userRouter from './user/routes.js';
 import { orm, syncSchema, newSchema } from './shared/db/orm.js';
 import { ARRAY_OPERATORS, RequestContext } from '@mikro-orm/core';
-import { verifyToken } from './shared/jwt/controller.js';
 import swaggerUi from 'swagger-ui-express';
 import { swaggerSpec } from './shared/swagger/spec.js';
 import OpenApiValidator from 'express-openapi-validator';
+import { User, UserRole } from './user/entity.js';
 
 async function start() {
   // Express setup
@@ -28,6 +29,11 @@ async function start() {
   if (process.env.ORM_NEW_SCHEMA === 'true') {
     console.log(`\n Dropping and re-creating database schema`);
     await newSchema();
+    console.log(`\n Creating default administrator user`);
+    await orm.em.insert(
+      User,
+      new User('admin', 'admin', UserRole.administrator)
+    );
   }
   if (process.env.ORM_SYNC_SCHEMA === 'true') {
     console.log(`\n Syncing database schema`);
@@ -51,6 +57,7 @@ async function start() {
   console.log(`\n Opening endpoints`);
   app.use('/retail', retailRouter);
   app.use('/auth', authRouter);
+  app.use('/user', userRouter);
 
   // Publish service
   console.log(`\n Publishing service`);
