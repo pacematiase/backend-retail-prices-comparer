@@ -1,19 +1,19 @@
-import { config } from './shared/env/env.js';
-import express, { NextFunction, Request, Response } from 'express';
-import 'reflect-metadata';
-import { orm, syncSchema, newSchema } from './shared/db/orm.js';
-import { ARRAY_OPERATORS, RequestContext } from '@mikro-orm/core';
-import swaggerUi from 'swagger-ui-express';
-import { swaggerSpec } from './shared/swagger/spec.js';
-import OpenApiValidator from 'express-openapi-validator';
+import { config } from "./shared/env/env.js";
+import express, { NextFunction, Request, Response } from "express";
+import "reflect-metadata";
+import { orm, syncSchema, newSchema } from "./shared/db/orm.js";
+import { ARRAY_OPERATORS, RequestContext } from "@mikro-orm/core";
+import swaggerUi from "swagger-ui-express";
+import { swaggerSpec } from "./shared/swagger/spec.js";
+import OpenApiValidator from "express-openapi-validator";
 
-import { sUserInsert } from './user/service.js';
-import { UserRole } from './shared/enums/userRole.js';
+import { sUserInsert } from "./user/service.js";
+import { UserRole } from "./shared/enums/userRole.js";
 
-import retailRouter from './retail/routes.js';
-import authRouter from './shared/auth/routes.js';
-import userRouter from './user/routes.js';
-
+import retailRouter from "./retail/routes.js";
+import authRouter from "./shared/auth/routes.js";
+import userRouter from "./user/routes.js";
+import categoryRouter from "./category/routes.js";
 async function start() {
   // Express setup
   console.log(`\n Starting express`);
@@ -35,8 +35,8 @@ async function start() {
     console.log(`\n Creating default administrator user`);
     await RequestContext.create(orm.em, async () => {
       await sUserInsert({
-        userName: 'admin',
-        userPassword: 'admin',
+        userName: "admin",
+        userPassword: "admin",
         userRole: UserRole.administrator,
       });
     });
@@ -48,7 +48,7 @@ async function start() {
 
   // Swagger OpenAPI Setup (Show APIs documentation in http://DATABASE_HOST:PORT/docs)
   console.log(`\n Starting OpenAPI Swagger documentation`);
-  app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+  app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
   // OpenAPI validator setup, to validate that all API calls follow the schema defined in each routes.ts file and return 400 if not
   console.log(`\n Enabling OpenAPI Payload schema validator`);
@@ -61,9 +61,10 @@ async function start() {
 
   // Routes setup (API endpoints)
   console.log(`\n Opening endpoints`);
-  app.use('/retail', retailRouter);
-  app.use('/auth', authRouter);
-  app.use('/user', userRouter);
+  app.use("/category", categoryRouter);
+  app.use("/retail", retailRouter);
+  app.use("/auth", authRouter);
+  app.use("/user", userRouter);
 
   // Publish service
   console.log(`\n Publishing service`);
