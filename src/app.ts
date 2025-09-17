@@ -14,6 +14,7 @@ import retailRouter from "./retail/routes.js";
 import authRouter from "./shared/auth/routes.js";
 import userRouter from "./user/routes.js";
 import categoryRouter from "./category/routes.js";
+import subCategoryRouter from "./subCategory/routes.js";
 async function start() {
   // Express setup
   console.log(`\n Starting express`);
@@ -65,6 +66,7 @@ async function start() {
   app.use("/retail", retailRouter);
   app.use("/auth", authRouter);
   app.use("/user", userRouter);
+  app.use("/subCategory", subCategoryRouter);
 
   // Publish service
   console.log(`\n Publishing service`);

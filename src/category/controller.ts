@@ -9,8 +9,8 @@ import {
 
 export async function cCategoryFindAll(req = request, res = response) {
   const result = await sCategoryFindAll();
-  res.json({
-    message: "Categories retrieved successfully",
+  res.status(result.statusCode).json({
+    message: result.message,
     errDetails: result.errDetails,
     data: result.data,
   });
@@ -19,9 +19,8 @@ export async function cCategoryFindAll(req = request, res = response) {
 export async function cCategoryFindById(req = request, res = response) {
   const { id } = req.params;
   const category = await sCategoryFindById(Number(id));
-  if (!category) return res.sendStatus(404);
-  res.json({
-    message: "Category retrieved successfully",
+  res.status(category.statusCode).json({
+    message: category.message,
     errDetails: category.errDetails,
     data: category.data,
   });
@@ -30,8 +29,8 @@ export async function cCategoryFindById(req = request, res = response) {
 export async function cCategoryCreate(req = request, res = response) {
   const { categoryName } = req.body;
   const category = await sCategoryInsert(categoryName);
-  res.json({
-    message: "Category created successfully",
+  res.status(category.statusCode).json({
+    message: category.message,
     errDetails: category.errDetails,
     data: category.data,
   });
@@ -41,8 +40,8 @@ export async function cCategoryUpdate(req = request, res = response) {
   const { id } = req.params;
   const { categoryName } = req.body;
   const updatedCategory = await sCategoryRename(Number(id), categoryName);
-  res.json({
-    message: "Category updated successfully",
+  res.status(updatedCategory.statusCode).json({
+    message: updatedCategory.message,
     errDetails: updatedCategory.errDetails,
     data: updatedCategory.data,
   });
@@ -50,10 +49,10 @@ export async function cCategoryUpdate(req = request, res = response) {
 
 export async function cCategoryDelete(req = request, res = response) {
   const { id } = req.params;
-  const response = await sCategoryDelete(Number(id));
-  res.json({
-    message: "Category deleted successfully",
-    errDetails: response.errDetails,
-    data: response.data,
+  const result = await sCategoryDelete(Number(id));
+  res.status(result.statusCode).json({
+    message: result.message,
+    errDetails: result.errDetails,
+    data: result.data,
   });
 }
