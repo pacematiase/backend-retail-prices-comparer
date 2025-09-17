@@ -28,7 +28,8 @@ export async function cCategoryFindById(req = request, res = response) {
 }
 
 export async function cCategoryCreate(req = request, res = response) {
-  const category = await sCategoryInsert(req.body);
+  const { categoryName } = req.body;
+  const category = await sCategoryInsert(categoryName);
   res.json({
     message: "Category created successfully",
     errDetails: category.errDetails,
@@ -38,7 +39,8 @@ export async function cCategoryCreate(req = request, res = response) {
 
 export async function cCategoryUpdate(req = request, res = response) {
   const { id } = req.params;
-  const updatedCategory = await sCategoryRename(Number(id), req.body);
+  const { categoryName } = req.body;
+  const updatedCategory = await sCategoryRename(Number(id), categoryName);
   res.json({
     message: "Category updated successfully",
     errDetails: updatedCategory.errDetails,

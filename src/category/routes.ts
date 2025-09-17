@@ -12,60 +12,18 @@ import { UserRole } from "../shared/enums/userRole.js";
 
 const categoryRouter = Router();
 
-/**
- * @swagger
- * /category:
- *   get:
- *     tags: [Category]
- *     summary: Get all categories
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: A list of categories
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- *       401:
- *         description: Unauthorized
- *       403:
- *         description: Forbidden
- *   post:
- *     tags: [Category]
- *     summary: Create a new category
- *     security:
- *       - bearerAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               categoryName:
- *                 type: string
- *     responses:
- *       201:
- *         description: The created category
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *       400:
- *         description: Bad request
- *       401:
- *         description: Unauthorized
- *       403:
- *         description: Forbidden
- */
 categoryRouter.get(
   "/",
   sValidateToken,
   sValidateRole([UserRole.administrator, UserRole.endUser]),
   cCategoryFindAll
+);
+
+categoryRouter.get(
+  "/:id",
+  sValidateToken,
+  sValidateRole([UserRole.administrator, UserRole.endUser]),
+  cCategoryFindById
 );
 
 categoryRouter.post(
@@ -75,97 +33,11 @@ categoryRouter.post(
   cCategoryCreate
 );
 
-/**
- * @swagger
- * /category/{id}:
- *   get:
- *     tags: [Category]
- *     summary: Get a category by ID
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *         description: Category ID
- *     responses:
- *       200:
- *         description: The category
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *       401:
- *         description: Unauthorized
- *       403:
- *         description: Forbidden
- *       404:
- *         description: Category not found
- *   put:
- *     tags: [Category]
- *     summary: Update a category by ID
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *         description: Category ID
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               categoryName:
- *                 type: string
- *     responses:
- *       200:
- *         description: The updated category
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *       400:
- *         description: Bad request
- *       401:
- *         description: Unauthorized
- *       403:
- *         description: Forbidden
- *       404:
- *         description: Category not found
- *   delete:
- *     tags: [Category]
- *     summary: Delete a category by ID
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *         description: Category ID
- *     responses:
- *       204:
- *         description: Category deleted
- *       401:
- *         description: Unauthorized
- *       403:
- *         description: Forbidden
- *       404:
- *         description: Category not found
- */
-categoryRouter.get(
+categoryRouter.delete(
   "/:id",
   sValidateToken,
-  sValidateRole([UserRole.administrator, UserRole.endUser]),
-  cCategoryFindById
+  sValidateRole([UserRole.administrator]),
+  cCategoryDelete
 );
 
 categoryRouter.put(
@@ -175,11 +47,109 @@ categoryRouter.put(
   cCategoryUpdate
 );
 
-categoryRouter.delete(
-  "/:id",
-  sValidateToken,
-  sValidateRole([UserRole.administrator]),
-  cCategoryDelete
-);
-
 export default categoryRouter;
+
+// Swagger documentation
+
+/**
+ * @openapi
+ * /category:
+ *   get:
+ *     tags:
+ *       - Category
+ *     security:
+ *       - bearerAuth: []
+ *     summary: Get all categories
+ *     responses:
+ *       200:
+ *         description: List of all categories
+ *   post:
+ *     tags:
+ *       - Category
+ *     security:
+ *       - bearerAuth: []
+ *     summary: Create a category
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - categoryName
+ *             properties:
+ *               categoryName:
+ *                 type: string
+ *                 example: Electronics
+ *     responses:
+ *       200:
+ *         description: Created category information
+ */
+
+/**
+ * @openapi
+ * /category/{id}:
+ *   get:
+ *     tags:
+ *       - Category
+ *     security:
+ *       - bearerAuth: []
+ *     summary: Get one category
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID of the category
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *     responses:
+ *       200:
+ *         description: Found category information
+ *   put:
+ *     tags:
+ *       - Category
+ *     security:
+ *       - bearerAuth: []
+ *     summary: Update a category
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID of the category
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - categoryName
+ *             properties:
+ *               categoryName:
+ *                 type: string
+ *                 example: Electronics
+ *     responses:
+ *       200:
+ *         description: Category was successfully updated
+ *   delete:
+ *     tags:
+ *       - Category
+ *     security:
+ *       - bearerAuth: []
+ *     summary: Delete a category
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID of the category
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *     responses:
+ *       200:
+ *         description: Category was successfully deleted
+ */
