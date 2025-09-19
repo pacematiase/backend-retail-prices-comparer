@@ -1,13 +1,13 @@
-import { config } from '../env/env.js';
-import swaggerJsdoc from 'swagger-jsdoc';
+import { config } from "../env/env.js";
+import swaggerJsdoc from "swagger-jsdoc";
 
 const options: swaggerJsdoc.Options = {
   definition: {
-    openapi: '3.0.0',
+    openapi: "3.0.0",
     security: [{ bearerAuth: [] }],
     info: {
-      title: 'Retail prices comparer',
-      version: '1.0.0',
+      title: "Retail prices comparer",
+      version: "1.0.1",
       description: `
 # Welcome to Retail prices comparer (backend app)
 
@@ -35,24 +35,28 @@ Authorization: Bearer <your-token>
 
     tags: [
       {
-        name: 'Auth',
-        description: 'Authentication functions',
+        name: "Auth",
+        description: "Authentication functions",
       },
       {
-        name: 'Retail',
-        description: 'Retails CRUD',
+        name: "Retail",
+        description: "Retails CRUD",
       },
       {
-        name: 'User',
-        description: 'Users CRUD',
+        name: "User",
+        description: "Users CRUD",
+      },
+      {
+        name: "Category",
+        description: "Categories CRUD",
       },
     ],
     components: {
       securitySchemes: {
         bearerAuth: {
-          type: 'http',
-          scheme: 'bearer',
-          bearerFormat: 'JWT',
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
         },
       },
     },
@@ -60,7 +64,7 @@ Authorization: Bearer <your-token>
 
   // .ts files from which to get the API descriptions.
 
-  apis: ['./src/**/routes.ts'],
+  apis: ["./src/**/routes.ts"],
 };
 
 export const swaggerSpec = swaggerJsdoc(options);

@@ -1,9 +1,9 @@
-import { Router } from 'express';
-import { cAuthLogin } from './controller.js';
+import { Router } from "express";
+import { cAuthLogin } from "./controller.js";
 
 const authRouter = Router();
 
-authRouter.post('/login', cAuthLogin);
+authRouter.post("/login", cAuthLogin);
 
 export default authRouter;
 
@@ -29,10 +29,10 @@ export default authRouter;
  *             properties:
  *               userName:
  *                 type: string
- *                 example: Alice
+ *                 example: admin
  *               userPassword:
  *                 type: string
- *                 example: alice1
+ *                 example: admin
  *     responses:
  *       200:
  *         description: Authentication token successfully received
