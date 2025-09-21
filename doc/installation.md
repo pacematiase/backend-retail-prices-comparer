@@ -46,7 +46,7 @@ $ npm run build
 
 <b>WARNING: THIS COMMAND DROPS AND RE-CREATES THE DATABASE</b>
 ```
-$ npm initdb
+$ npm run initdb
 ```
 
 6. Run the project. There’s a command for each environment:
