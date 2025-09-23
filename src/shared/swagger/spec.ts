@@ -1,5 +1,5 @@
-import { config } from "../env/env.js";
 import swaggerJsdoc from "swagger-jsdoc";
+import { config } from "../env/env.js";
 
 const options: swaggerJsdoc.Options = {
   definition: {
@@ -49,6 +49,30 @@ Authorization: Bearer <your-token>
       {
         name: "Category",
         description: "Categories CRUD",
+      },
+      {
+        name: "Product",
+        description: "Products CRUD",
+      },
+      {
+        name: "RetailProduct",
+        description: "RetailProducts CRUD",
+      },
+      {
+        name: "ShoppingList",
+        description: "ShoppingLists CRUD",
+      },
+      {
+        name: "ShoppingListItem",
+        description: "ShoppingListItems CRUD",
+      },
+      {
+        name: "Price",
+        description: "Prices CRUD",
+      },
+      {
+        name: "Branch",
+        description: "Branches CRUD",
       },
     ],
     components: {
