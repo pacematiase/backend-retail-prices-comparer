@@ -8,9 +8,10 @@ import {
   rUserInsert,
   rUserPatch,
   rUserDelete,
+  rUserChangePassword,
 } from './repository.js';
 import { User } from './entity.js';
-import { sHashPassword } from '../shared/auth/service.js';
+import { sHashPassword, sAuthComparePassword } from '../shared/auth/service.js';
 
 export async function sUserFindAll(): Promise<
   ControllerResponse<User[] | null>
@@ -283,6 +284,78 @@ export async function sUserDelete(item: {
       'User deleted successfully',
       null,
       rUserFindOneByIdRes
+    );
+  } catch (err) {
+    return new ControllerResponse(
+      500,
+      'There was an unexpected error',
+      JSON.stringify(err),
+      null
+    );
+  }
+}
+
+export async function sUserChangePassword(item: {
+  userId: number;
+  oldPassword: string;
+  newPassword: string;
+}): Promise<
+  ControllerResponse<{
+    userId: number;
+    oldPassword: string;
+    newPassword: string;
+  } | null>
+> {
+  try {
+    if (item.userId < 1) {
+      return new ControllerResponse(
+        400,
+        'userId must be a positive integer',
+        '',
+        null
+      );
+    }
+    if (item.newPassword.length === 0) {
+      return new ControllerResponse(
+        400,
+        'userPassword must not be empty',
+        '',
+        null
+      );
+    }
+    const rUserFindOneByIdRes = await rUserFindOneById(item.userId);
+    if (rUserFindOneByIdRes === null) {
+      return new ControllerResponse(404, 'User was not found', '', null);
+    }
+    let oldPasswordInRepository = (await rUserGetHashedPassword(
+      rUserFindOneByIdRes.userName
+    ))!.userPassword;
+    let comparePasswordResult = await sAuthComparePassword(
+      item.oldPassword,
+      oldPasswordInRepository
+    );
+    if (comparePasswordResult === false) {
+      return new ControllerResponse(
+        404,
+        'Old password is not correct',
+        '',
+        null
+      );
+    }
+    let newPassword = await sHashPassword(item.newPassword);
+    const rUserChangePasswordRes = await rUserChangePassword(
+      item.userId,
+      newPassword
+    );
+    return new ControllerResponse(
+      200,
+      'User password was updated successfully',
+      null,
+      {
+        userId: item.userId,
+        oldPassword: oldPasswordInRepository,
+        newPassword: newPassword,
+      }
     );
   } catch (err) {
     return new ControllerResponse(

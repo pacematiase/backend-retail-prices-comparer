@@ -12,11 +12,6 @@ const JWT_SECRET = config.JWT_SECRET;
 const JWT_EXPIRES_IN = config.JWT_EXPIRES_IN;
 const BCRYPT_SALT = config.BCRYPT_SALT; // Higher = safer & slower
 
-interface AuthRequest extends Request {
-  userId?: string;
-  userRole?: UserRole;
-}
-
 interface JwtPayload {
   userId: string;
   userRole: UserRole;
@@ -24,6 +19,13 @@ interface JwtPayload {
 
 export async function sHashPassword(userPassword: string) {
   return bcrypt.hash(userPassword, BCRYPT_SALT);
+}
+
+export async function sAuthComparePassword(
+  password: string,
+  hashedPassword: string
+) {
+  return bcrypt.compare(password, hashedPassword);
 }
 
 export async function sAuthLogin(item: {
@@ -34,7 +36,7 @@ export async function sAuthLogin(item: {
     let generateToken = false;
     const user = await sUserGetHashedPassword({ userName: item.userName });
     if (user.data) {
-      generateToken = await bcrypt.compare(
+      generateToken = await sAuthComparePassword(
         item.userPassword,
         user.data.userPassword
       );
@@ -74,7 +76,7 @@ export async function sAuthLogin(item: {
 }
 
 export const sValidateToken = (
-  req: AuthRequest,
+  req: Request,
   res: Response,
   next: NextFunction
 ) => {
@@ -96,7 +98,7 @@ export const sValidateToken = (
 };
 
 export const sValidateRole = (allowedRoles: UserRole[]) => {
-  return (req: AuthRequest, res: Response, next: NextFunction) => {
+  return (req: Request, res: Response, next: NextFunction) => {
     const userRole = req.userRole;
     if (!userRole || !allowedRoles.includes(userRole)) {
       return res.status(403).json({

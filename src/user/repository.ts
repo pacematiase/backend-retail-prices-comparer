@@ -70,3 +70,23 @@ export async function rUserDelete(userId: number) {
     throw e;
   }
 }
+
+export async function rUserChangePassword(userId: number, newPassword: string) {
+  await orm.em.begin();
+  try {
+    const updateResult = await orm.em.nativeUpdate(
+      User,
+      {
+        userId: userId,
+      },
+      {
+        userPassword: newPassword,
+      }
+    );
+    await orm.em.commit();
+    return updateResult;
+  } catch (e) {
+    await orm.em.rollback();
+    throw e;
+  }
+}

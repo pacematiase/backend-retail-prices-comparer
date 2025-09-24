@@ -11,8 +11,10 @@ import {
   cUserInsert,
   cUserPatch,
   cUserDelete,
+  cUserChangePassword,
 } from './controller.js';
 import { UserRole } from '../shared/enums/userRole.js';
+import { User } from './entity.js';
 
 const userRouter = Router();
 
@@ -49,6 +51,13 @@ userRouter.delete(
   sValidateToken,
   sValidateRole([UserRole.administrator]),
   cUserDelete
+);
+
+userRouter.post(
+  '/changePassword',
+  sValidateToken,
+  sValidateRole([UserRole.administrator, UserRole.endUser]),
+  cUserChangePassword
 );
 
 export default userRouter;
@@ -170,4 +179,34 @@ export default userRouter;
  *     responses:
  *       200:
  *         description: User was successfully deleted
+ */
+
+/**
+ * @openapi
+ * /user/changePassword:
+ *   post:
+ *     tags:
+ *       - User
+ *     security:
+ *       - bearerAuth: []
+ *     summary: Change self password
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - oldPassword
+ *               - newPassword
+ *             properties:
+ *               oldPassword:
+ *                 type: string
+ *                 example: password1
+ *               newPassword:
+ *                 type: string
+ *                 example: password2
+ *     responses:
+ *       200:
+ *         description: Password was successfully updated
  */
