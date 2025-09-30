@@ -9,9 +9,11 @@ import {
   cUserFindAll,
   cUserFindOneById,
   cUserInsert,
-  cUserPatch,
+  cUserUpdate,
   cUserDelete,
   cUserChangePassword,
+  cUserChangeUserName,
+  cUserSignUp,
 } from './controller.js';
 import { UserRole } from '../shared/enums/userRole.js';
 import { User } from './entity.js';
@@ -43,7 +45,7 @@ userRouter.put(
   '/:userId',
   sValidateToken,
   sValidateRole([UserRole.administrator]),
-  cUserPatch
+  cUserUpdate
 );
 
 userRouter.delete(
@@ -59,6 +61,15 @@ userRouter.post(
   sValidateRole([UserRole.administrator, UserRole.endUser]),
   cUserChangePassword
 );
+
+userRouter.post(
+  '/changeUserName',
+  sValidateToken,
+  sValidateRole([UserRole.administrator, UserRole.endUser]),
+  cUserChangeUserName
+);
+
+userRouter.post('/signUp', cUserSignUp);
 
 export default userRouter;
 
@@ -209,4 +220,63 @@ export default userRouter;
  *     responses:
  *       200:
  *         description: Password was successfully updated
+ */
+
+/**
+ * @openapi
+ * /user/changeUserName:
+ *   post:
+ *     tags:
+ *       - User
+ *     security:
+ *       - bearerAuth: []
+ *     summary: Change self userName
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - newUserName
+ *               - password
+ *             properties:
+ *               newUserName:
+ *                 type: string
+ *                 example: newUserName
+ *               password:
+ *                 type: string
+ *                 example: userName1
+ *     responses:
+ *       200:
+ *         description: UserName was successfully updated
+ */
+
+/**
+ * @openapi
+ * /user/signUp:
+ *   post:
+ *     tags:
+ *       - User
+ *     summary: Sign up to the application
+ *     security: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - userName
+ *               - userPassword
+ *             properties:
+ *               userName:
+ *                 type: string
+ *                 example: user
+ *               userPassword:
+ *                 type: string
+ *                 example: user1
+ *     responses:
+ *       200:
+ *         description: User was successfully created
  */

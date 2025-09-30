@@ -34,7 +34,7 @@ export async function rUserInsert(User: User) {
   }
 }
 
-export async function rUserPatch(
+export async function rUserUpdate(
   userId: number,
   item: {
     userName?: string;
@@ -81,6 +81,26 @@ export async function rUserChangePassword(userId: number, newPassword: string) {
       },
       {
         userPassword: newPassword,
+      }
+    );
+    await orm.em.commit();
+    return updateResult;
+  } catch (e) {
+    await orm.em.rollback();
+    throw e;
+  }
+}
+
+export async function rUserChangeUserName(userId: number, newUserName: string) {
+  await orm.em.begin();
+  try {
+    const updateResult = await orm.em.nativeUpdate(
+      User,
+      {
+        userId: userId,
+      },
+      {
+        userName: newUserName,
       }
     );
     await orm.em.commit();
