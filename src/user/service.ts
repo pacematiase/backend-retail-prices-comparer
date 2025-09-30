@@ -6,11 +6,13 @@ import {
   rUserFindOneByName,
   rUserGetHashedPassword,
   rUserInsert,
-  rUserPatch,
+  rUserUpdate,
   rUserDelete,
+  rUserChangePassword,
+  rUserChangeUserName,
 } from './repository.js';
 import { User } from './entity.js';
-import { sHashPassword } from '../shared/auth/service.js';
+import { sHashPassword, sAuthComparePassword } from '../shared/auth/service.js';
 
 export async function sUserFindAll(): Promise<
   ControllerResponse<User[] | null>
@@ -155,7 +157,48 @@ export async function sUserInsert(item: {
   }
 }
 
-export async function sUserPatch(item: {
+export async function sUserSignUp(item: {
+  userName: string;
+  userPassword: string;
+}): Promise<ControllerResponse<User | null>> {
+  try {
+    if (item.userName.length === 0) {
+      return new ControllerResponse(
+        400,
+        'userName must not be empty',
+        '',
+        null
+      );
+    }
+    const rUserFindOneByNameRes = await rUserFindOneByName(item.userName);
+    if (rUserFindOneByNameRes !== null) {
+      return new ControllerResponse(
+        400,
+        'userName is already in use',
+        '',
+        null
+      );
+    }
+    const hashedPassword = await sHashPassword(item.userPassword);
+    const user = new User(item.userName, hashedPassword, UserRole.endUser);
+    const rUserInsertRes = await rUserInsert(user);
+    return new ControllerResponse(
+      200,
+      'User created successfully',
+      null,
+      rUserInsertRes
+    );
+  } catch (err) {
+    return new ControllerResponse(
+      500,
+      'There was an unexpected error',
+      JSON.stringify(err),
+      null
+    );
+  }
+}
+
+export async function sUserUpdate(item: {
   userId: number;
   userName?: string;
   userPassword?: string;
@@ -238,8 +281,8 @@ export async function sUserPatch(item: {
     if (item.userRole) {
       patchPayload.userRole = item.userRole;
     }
-    const rUserRenameRes = await rUserPatch(item.userId, patchPayload);
-    return new ControllerResponse(200, 'User patched successfully', null, {
+    const rUserRenameRes = await rUserUpdate(item.userId, patchPayload);
+    return new ControllerResponse(200, 'User updated successfully', null, {
       oldValue: rUserFindOneByIdRes,
       updatedFields: patchPayload,
     });
@@ -283,6 +326,166 @@ export async function sUserDelete(item: {
       'User deleted successfully',
       null,
       rUserFindOneByIdRes
+    );
+  } catch (err) {
+    return new ControllerResponse(
+      500,
+      'There was an unexpected error',
+      JSON.stringify(err),
+      null
+    );
+  }
+}
+
+export async function sUserChangePassword(item: {
+  userId: number;
+  oldPassword: string;
+  newPassword: string;
+}): Promise<
+  ControllerResponse<{
+    userId: number;
+    oldPassword: string;
+    newPassword: string;
+  } | null>
+> {
+  try {
+    if (item.userId < 1) {
+      return new ControllerResponse(
+        400,
+        'userId must be a positive integer',
+        '',
+        null
+      );
+    }
+    if (item.newPassword.length === 0) {
+      return new ControllerResponse(
+        400,
+        'userPassword must not be empty',
+        '',
+        null
+      );
+    }
+    const rUserFindOneByIdRes = await rUserFindOneById(item.userId);
+    if (rUserFindOneByIdRes === null) {
+      return new ControllerResponse(404, 'User was not found', '', null);
+    }
+    let oldPasswordInRepository = (await rUserGetHashedPassword(
+      rUserFindOneByIdRes.userName
+    ))!.userPassword;
+    let comparePasswordResult = await sAuthComparePassword(
+      item.oldPassword,
+      oldPasswordInRepository
+    );
+    if (comparePasswordResult === false) {
+      return new ControllerResponse(
+        404,
+        'Old password is not correct',
+        '',
+        null
+      );
+    }
+    let newPassword = await sHashPassword(item.newPassword);
+    const rUserChangePasswordRes = await rUserChangePassword(
+      item.userId,
+      newPassword
+    );
+    return new ControllerResponse(
+      200,
+      'User password was updated successfully',
+      null,
+      {
+        userId: item.userId,
+        oldPassword: oldPasswordInRepository,
+        newPassword: newPassword,
+      }
+    );
+  } catch (err) {
+    return new ControllerResponse(
+      500,
+      'There was an unexpected error',
+      JSON.stringify(err),
+      null
+    );
+  }
+}
+
+export async function sUserChangeUserName(item: {
+  userId: number;
+  newUserName: string;
+  password: string;
+}): Promise<
+  ControllerResponse<{
+    userId: number;
+    oldUserName: string;
+    newUserName: string;
+  } | null>
+> {
+  try {
+    if (item.userId < 1) {
+      return new ControllerResponse(
+        400,
+        'userId must be a positive integer',
+        '',
+        null
+      );
+    }
+    if (item.newUserName.length === 0) {
+      return new ControllerResponse(
+        400,
+        'userName must not be empty',
+        '',
+        null
+      );
+    }
+    if (item.password.length === 0) {
+      return new ControllerResponse(
+        400,
+        'password must not be empty',
+        '',
+        null
+      );
+    }
+    const rUserFindOneByIdRes = await rUserFindOneById(item.userId);
+    if (rUserFindOneByIdRes === null) {
+      return new ControllerResponse(404, 'User was not found', '', null);
+    }
+    let actualPassword = (await rUserGetHashedPassword(
+      rUserFindOneByIdRes.userName
+    ))!.userPassword;
+    let comparePasswordResult = await sAuthComparePassword(
+      item.password,
+      actualPassword
+    );
+    if (comparePasswordResult === false) {
+      return new ControllerResponse(
+        404,
+        'Entered password is not correct',
+        '',
+        null
+      );
+    }
+    const rUserFindOneByIdNameRes = await rUserFindOneByName(item.newUserName);
+    if (rUserFindOneByIdNameRes !== null) {
+      return new ControllerResponse(
+        404,
+        'UserName is already in use',
+        '',
+        null
+      );
+    }
+    const rUserChangeUserNameres = await rUserChangeUserName(
+      item.userId,
+      item.newUserName
+    );
+    return new ControllerResponse(
+      200,
+      'User name was updated successfully',
+      null,
+      {
+        userId: item.userId,
+        oldUserName: rUserFindOneByIdRes.userName,
+        newUserName: item.newUserName,
+      }
     );
   } catch (err) {
     return new ControllerResponse(
