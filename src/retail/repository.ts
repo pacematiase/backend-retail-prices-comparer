@@ -25,13 +25,16 @@ export async function rRetailInsert(Retail: Retail) {
   }
 }
 
-export async function rRetailRename(retailId: number, retailName: string) {
+export async function rRetailUpdate(
+  retailId: number,
+  newValues: { retailName?: string; retailUrl?: string }
+) {
   await orm.em.begin();
   try {
     const updateResult = await orm.em.nativeUpdate(
       Retail,
       { retailId: retailId },
-      { retailName: retailName }
+      newValues
     );
     await orm.em.commit();
     return updateResult;

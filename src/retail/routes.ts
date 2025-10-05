@@ -4,7 +4,7 @@ import {
   cRetailFindAll,
   cRetailFindOneById,
   cRetailInsert,
-  cRetailRename,
+  cRetailUpdate,
   cRetailDelete,
 } from './controller.js';
 import { UserRole } from '../shared/enums/userRole.js';
@@ -36,7 +36,7 @@ retailRouter.put(
   '/:retailId',
   sValidateToken,
   sValidateRole([UserRole.administrator]),
-  cRetailRename
+  cRetailUpdate
 );
 
 retailRouter.delete(
@@ -80,6 +80,9 @@ export default retailRouter;
  *               retailName:
  *                 type: string
  *                 example: Coto
+ *               retailUrl:
+ *                 type: string
+ *                 example: https://www.coto.com.ar
  *     responses:
  *       200:
  *         description: Created retail information
@@ -125,12 +128,13 @@ export default retailRouter;
  *         application/json:
  *           schema:
  *             type: object
- *             required:
- *               - retailName
  *             properties:
  *               retailName:
  *                 type: string
  *                 example: Coto
+ *               retailUrl:
+ *                 type: string
+ *                 example: https://www.coto.com.ar
  *     responses:
  *       200:
  *         description: Retail was successfully updated

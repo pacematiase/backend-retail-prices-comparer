@@ -4,7 +4,7 @@ import {
   rRetailFindOneById,
   rRetailFindOneByName,
   rRetailInsert,
-  rRetailRename,
+  rRetailUpdate,
   rRetailDelete,
 } from './repository.js';
 import { Retail } from './entity.js';
@@ -67,6 +67,7 @@ export async function sRetailFindOneById(item: {
 
 export async function sRetailInsert(item: {
   retailName: string;
+  retailUrl?: string;
 }): Promise<ControllerResponse<Retail | null>> {
   try {
     if (item.retailName.length === 0) {
@@ -86,7 +87,7 @@ export async function sRetailInsert(item: {
         null
       );
     }
-    const retail = new Retail(item.retailName);
+    const retail = new Retail(item.retailName, item.retailUrl);
     const rRetailInsertRes = await rRetailInsert(retail);
     return new ControllerResponse(
       200,
@@ -104,15 +105,17 @@ export async function sRetailInsert(item: {
   }
 }
 
-export async function sRetailRename(item: {
+export async function sRetailUpdate(item: {
   retailId: number;
-  retailName: string;
+  retailName?: string;
+  retailUrl?: string;
 }): Promise<
   ControllerResponse<{
     oldValue: Retail;
     newValue: {
       retailId: number;
-      retailName: string;
+      retailName?: string;
+      retailUrl?: string;
     };
   } | null>
 > {
@@ -125,10 +128,12 @@ export async function sRetailRename(item: {
         null
       );
     }
-    if (item.retailName.length === 0) {
+    const receivedUrl = item.retailUrl && item.retailUrl.length > 0;
+    const receivedName = item.retailName && item.retailName.length > 0;
+    if (!receivedUrl && !receivedName) {
       return new ControllerResponse(
         400,
-        'retailName must not be empty',
+        'Either retailName or retailUrl must have a value',
         '',
         null
       );
@@ -137,22 +142,37 @@ export async function sRetailRename(item: {
     if (rRetailFindOneByIdRes === null) {
       return new ControllerResponse(404, 'Retail was not found', '', null);
     }
-    const rRetailFindOneByNameRes = await rRetailFindOneByName(item.retailName);
-    if (rRetailFindOneByNameRes !== null) {
-      return new ControllerResponse(
-        400,
-        'retailName is already in use',
-        JSON.stringify(rRetailFindOneByNameRes),
-        null
+    if (receivedName) {
+      const rRetailFindOneByNameRes = await rRetailFindOneByName(
+        item.retailName!
       );
+      if (
+        rRetailFindOneByNameRes !== null &&
+        rRetailFindOneByNameRes.retailId !== item.retailId
+      ) {
+        return new ControllerResponse(
+          400,
+          'retailName is already in use',
+          JSON.stringify(rRetailFindOneByNameRes),
+          null
+        );
+      }
     }
-    const rRetailRenameRes = await rRetailRename(
-      item.retailId,
-      item.retailName
-    );
-    return new ControllerResponse(200, 'Retail renamed successfully', null, {
+    let newValues: { retailName?: string; retailUrl?: string } = {};
+    if (receivedUrl) newValues.retailUrl = item.retailUrl;
+    if (receivedName) newValues.retailName = item.retailName;
+    const rRetailUpdateRes = await rRetailUpdate(item.retailId, newValues);
+    return new ControllerResponse(200, 'Retail updated successfully', null, {
       oldValue: rRetailFindOneByIdRes,
-      newValue: item,
+      newValue: {
+        retailId: item.retailId,
+        retailName: item.retailName
+          ? item.retailName
+          : rRetailFindOneByIdRes.retailName,
+        retailUrl: item.retailUrl
+          ? item.retailUrl
+          : rRetailFindOneByIdRes.retailUrl,
+      },
     });
   } catch (err) {
     return new ControllerResponse(
