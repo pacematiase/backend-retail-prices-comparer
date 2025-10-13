@@ -8,3 +8,15 @@ declare module 'express-serve-static-core' {
     userRole?: UserRole;
   }
 }
+
+
+import { UserRole } from '../shared/enums/userRole';
+
+declare global {
+  namespace Express {
+    interface Request {
+      userId?: string;
+      userRole?: UserRole;
+    }
+  }
+}

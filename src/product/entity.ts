@@ -1,5 +1,6 @@
-import { Entity, ManyToOne, PrimaryKey, Property } from "@mikro-orm/core";
+import { Entity, ManyToMany, ManyToOne, PrimaryKey, Property, Collection } from "@mikro-orm/core";
 import { SubCategory } from "../subCategory/entity.js";
+import { Brand } from "../brand/entity.js";
 
 @Entity()
 export class Product {
@@ -15,6 +16,8 @@ export class Product {
   productCodeBar!: string;
   @Property({ nullable: true })
   productImage!: string;
+  @ManyToMany(() => Brand)
+  brands = new Collection<Brand>(this);
   constructor(
     subCategory: SubCategory,
     productSKU: string,

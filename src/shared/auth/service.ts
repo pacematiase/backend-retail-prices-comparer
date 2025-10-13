@@ -6,6 +6,8 @@ import { UserRole } from '../enums/userRole.js';
 import { sUserGetHashedPassword } from '../../user/service.js';
 import { ControllerResponse } from '../classes/controllerResponse.js';
 
+
+
 // to generate a secret key, run node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
 
 const JWT_SECRET = config.JWT_SECRET;
@@ -13,7 +15,7 @@ const JWT_EXPIRES_IN = config.JWT_EXPIRES_IN;
 const BCRYPT_SALT = config.BCRYPT_SALT; // Higher = safer & slower
 
 interface JwtPayload {
-  userId: string;
+  userId:string;
   userRole: UserRole;
 }
 
