@@ -18,6 +18,7 @@ import subCategoryRouter from "./subCategory/routes.js";
 import productRouter from "./product/routes.js";
 import retailProductRouter from "./retailProduct/routes.js";
 import branchRouter from "./branch/routes.js";
+import brandRouter from "./brand/routes.js";
 async function start() {
   // Express setup
   console.log(`\n Starting express`);
@@ -73,6 +74,7 @@ async function start() {
   app.use("/product", productRouter);
   app.use("/retailProduct", retailProductRouter);
   app.use("/branch", branchRouter);
+  app.use("/brand", brandRouter)
 
   // Publish service
   console.log(`\n Publishing service`);

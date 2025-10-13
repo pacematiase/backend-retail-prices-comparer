@@ -1,15 +1,17 @@
+version: "3.9"
+
 services:
   db:
     image: percona/percona-server
     container_name: retail-prices-comparer-db
     ports:
-      - "3308:3306"
+      - "3308:3306"  # puerto del host : puerto del contenedor
     environment:
       MYSQL_ROOT_HOST: '%'
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
-      MYSQL_DATABASE: app-retails
-      MYSQL_USER: dsw
-      MYSQL_PASSWORD: dsw
+      MYSQL_DATABASE: retail-prices-comparer  
+      MYSQL_USER: root                         
+      MYSQL_PASSWORD: root                    
     volumes:
       - retail-prices-comparer-data:/var/lib/mysql
 
