@@ -99,11 +99,16 @@ export async function sUserGetHashedPassword(item: {
     if (rUserGetHashedPasswordRes === null) {
       return new ControllerResponse(404, 'User was not found', '', null);
     }
-    return new ControllerResponse(
+    const payload: HashedPasswordPayload = {
+      userId: rUserGetHashedPasswordRes.id,
+      userRole: rUserGetHashedPasswordRes.userRole,
+      userPassword: rUserGetHashedPasswordRes.userPassword,
+    };
+    return new ControllerResponse<HashedPasswordPayload | null>(
       200,
       'Query executed successfully',
       null,
-      rUserGetHashedPasswordRes
+      payload
     );
   } catch (err) {
     return new ControllerResponse(
@@ -119,7 +124,7 @@ export async function sUserInsert(item: {
   userName: string;
   userPassword: string;
   userRole: UserRole;
-}): Promise<ControllerResponse<User | null>> {
+}): Promise<ControllerResponse<number | null>> {
   try {
     if (item.userName.length === 0) {
       return new ControllerResponse(
@@ -160,7 +165,7 @@ export async function sUserInsert(item: {
 export async function sUserSignUp(item: {
   userName: string;
   userPassword: string;
-}): Promise<ControllerResponse<User | null>> {
+}): Promise<ControllerResponse<number | null>> {
   try {
     if (item.userName.length === 0) {
       return new ControllerResponse(
@@ -257,7 +262,7 @@ export async function sUserUpdate(item: {
       const rUserFindOneByNameRes = await rUserFindOneByName(item.userName);
       if (
         rUserFindOneByNameRes !== null &&
-        rUserFindOneByNameRes.userId !== item.userId
+        rUserFindOneByNameRes.id !== item.userId
       ) {
         return new ControllerResponse(
           400,

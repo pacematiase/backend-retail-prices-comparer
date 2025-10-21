@@ -33,9 +33,7 @@ export async function cBrandFindByName(req: Request, res: Response) {
 }
 
 export async function cBrandCreate(req: Request, res: Response){
-    const brand = new Brand()
-    brand.brandName = req.body.brandName
-    const obrand = await sBrandCreate(brand)
+    const obrand = await sBrandCreate(req.body)
     res.status(obrand.statusCode).json({
         message: obrand.message,
         errDetails: obrand.errDetails,

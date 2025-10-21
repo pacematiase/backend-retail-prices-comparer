@@ -7,7 +7,7 @@ export async function rUserFindAll() {
 }
 
 export async function rUserFindOneById(userId: number) {
-  return await orm.em.findOne(User, { userId: userId });
+  return await orm.em.findOne(User, { id: userId });
 }
 
 export async function rUserFindOneByName(userName: string) {
@@ -18,7 +18,7 @@ export async function rUserGetHashedPassword(userName: string) {
   return await orm.em.findOne(
     User,
     { userName: userName },
-    { fields: ['userId', 'userRole', 'userPassword'] }
+    { fields: ['id', 'userRole', 'userPassword'] }
   );
 }
 
@@ -46,7 +46,7 @@ export async function rUserUpdate(
   try {
     const updateResult = await orm.em.nativeUpdate(
       User,
-      { userId: userId },
+      { id: userId },
       item
     );
     await orm.em.commit();
@@ -61,7 +61,7 @@ export async function rUserDelete(userId: number) {
   await orm.em.begin();
   try {
     const deleteResult = await orm.em.nativeDelete(User, {
-      userId: userId,
+      id: userId,
     });
     await orm.em.commit();
     return deleteResult;
@@ -77,7 +77,7 @@ export async function rUserChangePassword(userId: number, newPassword: string) {
     const updateResult = await orm.em.nativeUpdate(
       User,
       {
-        userId: userId,
+        id: userId,
       },
       {
         userPassword: newPassword,
@@ -97,7 +97,7 @@ export async function rUserChangeUserName(userId: number, newUserName: string) {
     const updateResult = await orm.em.nativeUpdate(
       User,
       {
-        userId: userId,
+        id: userId,
       },
       {
         userName: newUserName,
