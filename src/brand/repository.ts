@@ -15,8 +15,9 @@ export async function rBrandFindByName(name: string) {
 }
 
 export async function rBrandCreate(brand: Brand) {
-    await orm.em.persistAndFlush(brand);
-    return brand;
+    const newBrand = orm.em.create(Brand, brand);
+    await orm.em.persistAndFlush(newBrand);
+    return newBrand
 }
 
 export async function rBrandUpdate(id: number, brand:Partial<Brand>){
